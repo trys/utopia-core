@@ -1,0 +1,17 @@
+{
+  "name": "utopia-core",
+  "version": "1.0.0",
+  "description": "Utopia.fyi fluid calculations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "tsc"
+  },
+  "keywords": [],
+  "author": "Trys Mudford",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^5.3.3"
+  }
+}
