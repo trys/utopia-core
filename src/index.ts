@@ -40,6 +40,12 @@ export type UtopiaSize = {
   clampPx: string;
 }
 
+export type UtopiaSpaceScale = {
+  sizes: UtopiaSize[];
+  oneUpPairs: UtopiaSize[];
+  customPairs: UtopiaSize[];
+};
+
 export type UtopiaClampsConfig = {
   minWidth: number;
   maxWidth: number;
@@ -244,7 +250,7 @@ const calculateCustomPairs = (config: UtopiaSpaceConfig, sizes: UtopiaSize[]): U
   }).filter((size): size is UtopiaSize => !!size)
 }
 
-export const calculateSpaceScale = (config: UtopiaSpaceConfig) => {
+export const calculateSpaceScale = (config: UtopiaSpaceConfig): UtopiaSpaceScale => {
   const positiveSteps = [...config.positiveSteps || []].sort()
     .map((multiplier, i) => calculateSpaceSize(config, multiplier, i + 1)).reverse();
 
