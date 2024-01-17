@@ -1,6 +1,6 @@
 // Types
 
-type UtopiaTypeConfig = {
+export type UtopiaTypeConfig = {
   minWidth: number;
   maxWidth: number;
   minFontSize: number;
@@ -11,14 +11,14 @@ type UtopiaTypeConfig = {
   positiveSteps?: number;
 }
 
-type UtopiaStep = {
+export type UtopiaStep = {
   step: number;
   minFontSize: number;
   maxFontSize: number;
   clamp: string;
 }
 
-type UtopiaSpaceConfig = {
+export type UtopiaSpaceConfig = {
   minWidth: number;
   maxWidth: number;
   minSize: number;
@@ -28,20 +28,27 @@ type UtopiaSpaceConfig = {
   customSizes?: string[];
 }
 
-type UtopiaSize = {
+export type UtopiaSize = {
   label: string;
   minSize: number;
   maxSize: number;
   clamp: string;
 }
 
-type UtopiaClampConfig = {
+export type UtopiaClampsConfig = {
   minWidth: number;
   maxWidth: number;
   pairs: [number, number][];
 };
 
-type UtopiaClamp = {
+export type UtopiaClampConfig = {
+  minWidth: number;
+  maxWidth: number;
+  minSize: number;
+  maxSize: number;
+};
+
+export type UtopiaClamp = {
   label: string;
   clamp: string;
 }
@@ -52,7 +59,6 @@ const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a
 const clamp = (a: number, min: number = 0, max: number = 1) => Math.min(max, Math.max(min, a))
 const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x))
 const range = (x1: number, y1: number, x2: number, y2: number, a: number) => lerp(x2, y2, invlerp(x1, y1, a))
-
 const roundToTwo = (n: number) => Math.round((n + Number.EPSILON) * 1000) / 1000;
 
 export const calculateClamp = ({
@@ -60,12 +66,7 @@ export const calculateClamp = ({
   minSize,
   minWidth,
   maxWidth,
-}: {
-  minSize: number;
-  maxSize: number;
-  minWidth: number;
-  maxWidth: number;
-}): string => {
+}: UtopiaClampConfig): string => {
   const isNegative = minSize > maxSize;
   let min = isNegative ? maxSize : minSize;
   let max = isNegative ? minSize : maxSize;
@@ -75,7 +76,7 @@ export const calculateClamp = ({
   return `clamp(${roundToTwo(min / 16)}rem, ${roundToTwo(intersection)}rem + ${roundToTwo(slope * 100)}vw, ${roundToTwo(max / 16)}rem)`;
 }
 
-export const calculateClamps = ({ minWidth, maxWidth, pairs = [] } : UtopiaClampConfig): UtopiaClamp[] => {
+export const calculateClamps = ({ minWidth, maxWidth, pairs = [] } : UtopiaClampsConfig): UtopiaClamp[] => {
   return pairs.map(([minSize, maxSize]) => {
     return {
       label: `${minSize}-${maxSize}`,
