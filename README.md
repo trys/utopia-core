@@ -18,6 +18,7 @@ type UtopiaTypeConfig = {
   maxTypeScale: number;
   negativeSteps?: number;
   positiveSteps?: number;
+  relativeTo?: UtopiaRelativeTo;
 }
 
 type UtopiaStep = {
@@ -41,6 +42,7 @@ type UtopiaSpaceConfig = {
   negativeSteps?: number[];
   positiveSteps?: number[];
   customSizes?: string[];
+  relativeTo?: UtopiaRelativeTo;
 }
 
 type UtopiaSize = {
@@ -48,6 +50,7 @@ type UtopiaSize = {
   minSize: number;
   maxSize: number;
   clamp: string;
+  clampPx: string;
 }
 
 calculateSpaceScale(config: UtopiaSpaceConfig): {       
@@ -60,10 +63,12 @@ calculateSpaceScale(config: UtopiaSpaceConfig): {
 ### `calculateClamps`
 
 ```ts
-type UtopiaClampConfig = {
+type UtopiaClampsConfig = {
   minWidth: number;
   maxWidth: number;
   pairs: [number, number][];
+  usePx?: boolean;
+  relativeTo?: UtopiaRelativeTo;
 };
 
 type UtopiaClamp = {
@@ -71,7 +76,7 @@ type UtopiaClamp = {
   clamp: string;
 };
 
-calculateClamps(config: UtopiaClampConfig): UtopiaClamp[]
+calculateClamps(config: UtopiaClampsConfig): UtopiaClamp[]
 
 calculateClamps({
   minWidth: 320,
@@ -94,12 +99,16 @@ calculateClamps({
 ### `calculateClamp`
 
 ```ts
-calculateClamp({
+type UtopiaClampConfig = {
   minWidth: number;
   maxWidth: number;
   minSize: number;
   maxSize: number;
-}): string;
+  usePx?: boolean;
+  relativeTo?: UtopiaRelativeTo;
+};
+
+calculateClamp(UtopiaClampConfig): string;
 
 calculateClamp({
   minWidth: 320,

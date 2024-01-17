@@ -1,5 +1,7 @@
 // Types
 
+type UtopiaRelativeTo = 'viewport' | 'container';
+
 export type UtopiaTypeConfig = {
   minWidth: number;
   maxWidth: number;
@@ -9,6 +11,7 @@ export type UtopiaTypeConfig = {
   maxTypeScale: number;
   negativeSteps?: number;
   positiveSteps?: number;
+  relativeTo?: UtopiaRelativeTo;
 }
 
 export type UtopiaStep = {
@@ -26,6 +29,7 @@ export type UtopiaSpaceConfig = {
   negativeSteps?: number[];
   positiveSteps?: number[];
   customSizes?: string[];
+  relativeTo?: UtopiaRelativeTo;
 }
 
 export type UtopiaSize = {
@@ -33,12 +37,14 @@ export type UtopiaSize = {
   minSize: number;
   maxSize: number;
   clamp: string;
+  clampPx: string;
 }
 
 export type UtopiaClampsConfig = {
   minWidth: number;
   maxWidth: number;
   pairs: [number, number][];
+  relativeTo?: UtopiaRelativeTo;
 };
 
 export type UtopiaClampConfig = {
@@ -46,6 +52,8 @@ export type UtopiaClampConfig = {
   maxWidth: number;
   minSize: number;
   maxSize: number;
+  usePx?: boolean;
+  relativeTo?: UtopiaRelativeTo;
 };
 
 export type UtopiaClamp = {
@@ -61,26 +69,35 @@ const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x))
 const range = (x1: number, y1: number, x2: number, y2: number, a: number) => lerp(x2, y2, invlerp(x1, y1, a))
 const roundToTwo = (n: number) => Math.round((n + Number.EPSILON) * 1000) / 1000;
 
+// Clamp
+
 export const calculateClamp = ({
   maxSize,
   minSize,
   minWidth,
   maxWidth,
+  usePx = false,
+  relativeTo = 'viewport'
 }: UtopiaClampConfig): string => {
   const isNegative = minSize > maxSize;
-  let min = isNegative ? maxSize : minSize;
-  let max = isNegative ? minSize : maxSize;
+  const min = isNegative ? maxSize : minSize;
+  const max = isNegative ? minSize : maxSize;
 
-  const slope = ((maxSize / 16) - (minSize / 16)) / ((maxWidth / 16) - (minWidth / 16));
-  const intersection = (-1 * (minWidth / 16)) * slope + (minSize / 16);
-  return `clamp(${roundToTwo(min / 16)}rem, ${roundToTwo(intersection)}rem + ${roundToTwo(slope * 100)}vw, ${roundToTwo(max / 16)}rem)`;
+  const divider = usePx ? 1 : 16;
+  const unit = usePx ? 'px' : 'rem';
+  const relativeUnit = relativeTo === 'viewport' ? 'vi' : 'cqi';
+
+  const slope = ((maxSize / divider) - (minSize / divider)) / ((maxWidth / divider) - (minWidth / divider));
+  const intersection = (-1 * (minWidth / divider)) * slope + (minSize / divider);
+  return `clamp(${roundToTwo(min / divider)}${unit}, ${roundToTwo(intersection)}${unit} + ${roundToTwo(slope * 100)}${relativeUnit}, ${roundToTwo(max / divider)}${unit})`;
 }
 
-export const calculateClamps = ({ minWidth, maxWidth, pairs = [] } : UtopiaClampsConfig): UtopiaClamp[] => {
+export const calculateClamps = ({ minWidth, maxWidth, pairs = [], relativeTo } : UtopiaClampsConfig): UtopiaClamp[] => {
   return pairs.map(([minSize, maxSize]) => {
     return {
       label: `${minSize}-${maxSize}`,
-      clamp: calculateClamp({ minSize, maxSize, minWidth, maxWidth })
+      clamp: calculateClamp({ minSize, maxSize, minWidth, maxWidth, relativeTo }),
+      clampPx: calculateClamp({ minSize, maxSize, minWidth, maxWidth, relativeTo, usePx: true })
     }
   });
 }
@@ -106,6 +123,7 @@ const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep =
       maxSize: maxFontSize,
       minWidth: config.minWidth,
       maxWidth: config.maxWidth,
+      relativeTo: config.relativeTo
     })
   }
 }
@@ -154,6 +172,15 @@ const calculateSpaceSize = (config: UtopiaSpaceConfig, multiplier: number, step:
       maxSize,
       minWidth: config.minWidth,
       maxWidth: config.maxWidth,
+      relativeTo: config.relativeTo,
+    }),
+    clampPx: calculateClamp({
+      minSize,
+      maxSize,
+      minWidth: config.minWidth,
+      maxWidth: config.maxWidth,
+      relativeTo: config.relativeTo,
+      usePx: true,
     })
   }
 }
@@ -171,6 +198,15 @@ const calculateOneUpPairs = (config: UtopiaSpaceConfig, sizes: UtopiaSize[]): Ut
         maxSize: size.maxSize,
         minWidth: config.minWidth,
         maxWidth: config.maxWidth,
+        relativeTo: config.relativeTo,
+      }),
+      clampPx: calculateClamp({
+        minSize: prev.minSize,
+        maxSize: size.maxSize,
+        minWidth: config.minWidth,
+        maxWidth: config.maxWidth,
+        relativeTo: config.relativeTo,
+        usePx: true,
       }),
     }
   }).filter((size): size is UtopiaSize => !!size)
@@ -194,6 +230,15 @@ const calculateCustomPairs = (config: UtopiaSpaceConfig, sizes: UtopiaSize[]): U
         maxWidth: config.maxWidth,
         minSize: a.minSize,
         maxSize: b.maxSize,
+        relativeTo: config.relativeTo,
+      }),
+      clampPx: calculateClamp({
+        minWidth: config.minWidth,
+        maxWidth: config.maxWidth,
+        minSize: a.minSize,
+        maxSize: b.maxSize,
+        relativeTo: config.relativeTo,
+        usePx: true
       }),
     }
   }).filter((size): size is UtopiaSize => !!size)
