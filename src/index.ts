@@ -1,6 +1,6 @@
 // Types
 
-type UtopiaRelativeTo = 'viewport' | 'container';
+type UtopiaRelativeTo = 'viewport' | 'container' | 'viewport-width';
 
 export type UtopiaTypeConfig = {
   minWidth: number;
@@ -73,7 +73,7 @@ const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a
 const clamp = (a: number, min: number = 0, max: number = 1) => Math.min(max, Math.max(min, a))
 const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x))
 const range = (x1: number, y1: number, x2: number, y2: number, a: number) => lerp(x2, y2, invlerp(x1, y1, a))
-const roundToTwo = (n: number) => Math.round((n + Number.EPSILON) * 1000) / 1000;
+const roundValue = (n: number) => Math.round((n + Number.EPSILON) * 10000) / 10000;
 
 // Clamp
 
@@ -91,11 +91,16 @@ export const calculateClamp = ({
 
   const divider = usePx ? 1 : 16;
   const unit = usePx ? 'px' : 'rem';
-  const relativeUnit = relativeTo === 'viewport' ? 'vi' : 'cqi';
+  const relativeUnits = {
+    viewport: 'vi',
+    'viewport-width': 'vw',
+    container: 'cqi'
+  };
+  const relativeUnit = relativeUnits[relativeTo] || relativeUnits.viewport;
 
   const slope = ((maxSize / divider) - (minSize / divider)) / ((maxWidth / divider) - (minWidth / divider));
   const intersection = (-1 * (minWidth / divider)) * slope + (minSize / divider);
-  return `clamp(${roundToTwo(min / divider)}${unit}, ${roundToTwo(intersection)}${unit} + ${roundToTwo(slope * 100)}${relativeUnit}, ${roundToTwo(max / divider)}${unit})`;
+  return `clamp(${roundValue(min / divider)}${unit}, ${roundValue(intersection)}${unit} + ${roundValue(slope * 100)}${relativeUnit}, ${roundValue(max / divider)}${unit})`;
 }
 
 export const calculateClamps = ({ minWidth, maxWidth, pairs = [], relativeTo } : UtopiaClampsConfig): UtopiaClamp[] => {
@@ -122,8 +127,8 @@ const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep =
 
   return {
     step,
-    minFontSize: roundToTwo(minFontSize),
-    maxFontSize: roundToTwo(maxFontSize),
+    minFontSize: roundValue(minFontSize),
+    maxFontSize: roundValue(maxFontSize),
     clamp: calculateClamp({
       minSize: minFontSize,
       maxSize: maxFontSize,
@@ -171,8 +176,8 @@ const calculateSpaceSize = (config: UtopiaSpaceConfig, multiplier: number, step:
 
   return {
     label: label.toLowerCase(),
-    minSize: roundToTwo(minSize),
-    maxSize: roundToTwo(maxSize),
+    minSize: roundValue(minSize),
+    maxSize: roundValue(maxSize),
     clamp: calculateClamp({
       minSize,
       maxSize,
