@@ -18,6 +18,7 @@ export type UtopiaStep = {
   step: number;
   minFontSize: number;
   maxFontSize: number;
+  wcagViolation: number | null;
   clamp: string;
 }
 
@@ -103,7 +104,31 @@ export const calculateClamp = ({
   return `clamp(${roundValue(min / divider)}${unit}, ${roundValue(intersection)}${unit} + ${roundValue(slope * 100)}${relativeUnit}, ${roundValue(max / divider)}${unit})`;
 }
 
-export const calculateClamps = ({ minWidth, maxWidth, pairs = [], relativeTo } : UtopiaClampsConfig): UtopiaClamp[] => {
+/**
+ * checkWCAG
+ * Check if the clamp confirms to WCAG 1.4.4
+ * Many thanks to Maxwell Barvian, creator of fluid.style for this calculation
+ * @link https://barvian.me
+ * @returns number | null
+ */
+export function checkWCAG({ min, max, minWidth, maxWidth }: { min: number, max: number, minWidth: number, maxWidth: number }): number | null {
+  const slope = (max - min) / (maxWidth - minWidth)
+  const intercept = min - (minWidth * slope)
+  const zoom1 = (vw: number) => clamp(min, intercept + slope*vw, max) // 2*zoom1(vw) is the AA requirement
+  const zoom5 = (vw: number) => clamp(5*min, 5*intercept + slope*vw, 5*max)
+
+  // The only points that you need to check are 5*minScreen (lowest point of zoom5 function)
+  // and maxScreen (peak of 2*zoom1 function):
+  if (zoom5(5*minWidth) < 2*zoom1(5*minWidth)) {
+    return 5 * minWidth;
+  } else if (zoom5(maxWidth) < 2*zoom1(maxWidth)) {
+    return maxWidth;
+  }
+
+  return null;
+}
+
+export const calculateClamps = ({ minWidth, maxWidth, pairs = [], relativeTo }: UtopiaClampsConfig): UtopiaClamp[] => {
   return pairs.map(([minSize, maxSize]) => {
     return {
       label: `${minSize}-${maxSize}`,
@@ -124,11 +149,13 @@ const calculateTypeSize = (config: UtopiaTypeConfig, viewport: number, step: num
 const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep => {
   const minFontSize = calculateTypeSize(config, config.minWidth, step);
   const maxFontSize = calculateTypeSize(config, config.maxWidth, step);
+  const wcagViolation = checkWCAG({ min: minFontSize, max: maxFontSize, minWidth: config.minWidth, maxWidth: config.maxWidth });
 
   return {
     step,
     minFontSize: roundValue(minFontSize),
     maxFontSize: roundValue(maxFontSize),
+    wcagViolation,
     clamp: calculateClamp({
       minSize: minFontSize,
       maxSize: maxFontSize,
@@ -141,11 +168,11 @@ const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep =
 
 export const calculateTypeScale = (config: UtopiaTypeConfig): UtopiaStep[] => {
   const positiveSteps = Array.from({ length: config.positiveSteps || 0 })
-  .map((_, i) => calculateTypeStep(config, i + 1)).reverse();
-  
+    .map((_, i) => calculateTypeStep(config, i + 1)).reverse();
+
   const negativeSteps = Array.from({ length: config.negativeSteps || 0 })
-  .map((_, i) => calculateTypeStep(config, -1 * (i + 1)));
-  
+    .map((_, i) => calculateTypeStep(config, -1 * (i + 1)));
+
   return [
     ...positiveSteps,
     calculateTypeStep(config, 0),
@@ -227,7 +254,7 @@ const calculateCustomPairs = (config: UtopiaSpaceConfig, sizes: UtopiaSize[]): U
   return (config.customSizes || []).map((label) => {
     const [keyA, keyB] = label.split('-');
     if (!keyA || !keyB) return null;
-    
+
     const a = sizes.find(x => x.label === keyA);
     const b = sizes.find(x => x.label === keyB);
     if (!a || !b) return null;
