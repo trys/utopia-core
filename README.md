@@ -10,6 +10,8 @@ The calculations behind [Utopia.fyi](https://utopia.fyi). Available in JS/TS.
 
 Create a fluid type scale between two widths, sizes and scales. Set the number of positive and negative steps, and whether you want the scale to be relative to the `viewport` or the `container`.
 
+If any step in the type scale fails [WCAG SC 1.4.4](https://www.w3.org/WAI/WCAG21/Understanding/resize-text.html), the viewports where the step fails to be zoomable to 200% are returned in `wcagViolation`.
+
 #### Schema
 
 ```ts
@@ -29,6 +31,10 @@ type UtopiaStep = {
   step: number;
   minFontSize: number;
   maxFontSize: number;
+  wcagViolation: {
+    from: number;
+    to: number;
+  } | null;
   clamp: string;
 }
 
@@ -53,6 +59,7 @@ calculateTypeScale({
 //    step: 5,
 //    minFontSize: 44.79,
 //    maxFontSize: 61.04,
+//    wcagViolation: 1200,
 //    clamp: 'clamp(2.7994rem, 2.4461rem + 1.7663vw, 3.815rem)',
 //  }
 //  ...
