@@ -78,6 +78,7 @@ const clamp = (a: number, min: number = 0, max: number = 1) => Math.min(max, Mat
 const invlerp = (x: number, y: number, a: number) => clamp((a - x) / (y - x))
 const range = (x1: number, y1: number, x2: number, y2: number, a: number) => lerp(x2, y2, invlerp(x1, y1, a))
 const roundValue = (n: number) => Math.round((n + Number.EPSILON) * 10000) / 10000;
+const sortNumberAscending = (a: number, b: number) => Number(a) - Number(b);
 
 // Clamp
 
@@ -325,10 +326,10 @@ const calculateCustomPairs = (config: UtopiaSpaceConfig, sizes: UtopiaSize[]): U
 }
 
 export const calculateSpaceScale = (config: UtopiaSpaceConfig): UtopiaSpaceScale => {
-  const positiveSteps = [...config.positiveSteps || []].sort()
+  const positiveSteps = [...config.positiveSteps || []].sort(sortNumberAscending)
     .map((multiplier, i) => calculateSpaceSize(config, multiplier, i + 1)).reverse();
 
-  const negativeSteps = [...config.negativeSteps || []].sort().reverse()
+  const negativeSteps = [...config.negativeSteps || []].sort(sortNumberAscending).reverse()
     .map((multiplier, i) => calculateSpaceSize(config, multiplier, -1 * (i + 1)));
 
   const sizes = [
