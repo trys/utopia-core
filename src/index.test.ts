@@ -1,24 +1,54 @@
 import { test, expect, describe } from 'vitest';
-import { calculateSpaceScale, calculateTypeScale } from '.';
+import { calculateClamp, calculateClamps, calculateSpaceScale, calculateTypeScale } from '.';
 
 // utils
 const logObject = (a: unknown) => console.dir(a, { depth: 4 });
 
-
-// TODO
 describe('calculateClamp', () => {
 
-  test.todo('should ???', () => {
-    expect(1).toBe(1);
+  test('should generate a single clamp function', () => {
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240 });    
+    const expected = 'clamp(1rem, 0.6522rem + 1.7391vi, 2rem)';
+    expect(result).toEqual(expected);
+  });
+
+  test('should generate a px clamp function', () => {
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, usePx: true });    
+    const expected = 'clamp(16px, 10.4348px + 1.7391vi, 32px)';
+    expect(result).toEqual(expected);
+  });
+
+  test('should generate a cqi clamp function', () => {
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, relativeTo: 'container' });    
+    const expected = 'clamp(1rem, 0.6522rem + 1.7391cqi, 2rem)';
+    expect(result).toEqual(expected);
+  });
+
+  test('should generate a vw clamp function', () => {
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, relativeTo: 'viewport-width' });    
+    const expected = 'clamp(1rem, 0.6522rem + 1.7391vw, 2rem)';
+    expect(result).toEqual(expected);
   });
 
 });
 
-// TODO
 describe('calculateClamps', () => {
 
-  test.todo('should ???', () => {
-    expect(1).toBe(1);
+  test('should generate multiple clamps', () => {
+    const result = calculateClamps({ minWidth: 320, maxWidth: 1080, pairs: [[12, 16], [40, 28]] });
+    const expected = [
+      {
+        clamp: "clamp(0.75rem, 0.6447rem + 0.5263vi, 1rem)",
+        clampPx: "clamp(12px, 10.3158px + 0.5263vi, 16px)",
+        label: "12-16",
+      },
+      {
+        clamp: "clamp(1.75rem, 2.8158rem + -1.5789vi, 2.5rem)",
+        clampPx: "clamp(28px, 45.0526px + -1.5789vi, 40px)",
+        label: "40-28",
+      },
+    ];
+    expect(result).toStrictEqual(expected);
   });
 
 });
@@ -431,4 +461,3 @@ describe('calculateTypeScale', () => {
   });
 
 });
-
