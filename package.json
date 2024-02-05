@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "vitest run && tsc",
     "test": "vitest run",
     "test:watch": "vitest watch"
   },
