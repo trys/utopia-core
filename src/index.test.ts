@@ -72,63 +72,72 @@ describe('calculateSpaceScale', () => {
           minSize: 5,
           maxSize: 5,
           clamp: 'clamp(0.3125rem, 0.3125rem + 0vi, 0.3125rem)',
-          clampPx: 'clamp(5px, 5px + 0vi, 5px)'
+          clampPx: 'clamp(5px, 5px + 0vi, 5px)',
+          multiplier: 0.25
         },
         {
           label: '2xs',
           minSize: 9,
           maxSize: 10,
           clamp: 'clamp(0.5625rem, 0.5408rem + 0.1087vi, 0.625rem)',
-          clampPx: 'clamp(9px, 8.6522px + 0.1087vi, 10px)'
+          clampPx: 'clamp(9px, 8.6522px + 0.1087vi, 10px)',
+          multiplier: 0.5
         },
         {
           label: 'xs',
           minSize: 14,
           maxSize: 15,
           clamp: 'clamp(0.875rem, 0.8533rem + 0.1087vi, 0.9375rem)',
-          clampPx: 'clamp(14px, 13.6522px + 0.1087vi, 15px)'
+          clampPx: 'clamp(14px, 13.6522px + 0.1087vi, 15px)',
+          multiplier: 0.75
         },
         {
           label: 's',
           minSize: 18,
           maxSize: 20,
           clamp: 'clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem)',
-          clampPx: 'clamp(18px, 17.3043px + 0.2174vi, 20px)'
+          clampPx: 'clamp(18px, 17.3043px + 0.2174vi, 20px)',
+          multiplier: 1,
         },
         {
           label: 'm',
           minSize: 27,
           maxSize: 30,
           clamp: 'clamp(1.6875rem, 1.6223rem + 0.3261vi, 1.875rem)',
-          clampPx: 'clamp(27px, 25.9565px + 0.3261vi, 30px)'
+          clampPx: 'clamp(27px, 25.9565px + 0.3261vi, 30px)',
+          multiplier: 1.5
         },
         {
           label: 'l',
           minSize: 36,
           maxSize: 40,
           clamp: 'clamp(2.25rem, 2.163rem + 0.4348vi, 2.5rem)',
-          clampPx: 'clamp(36px, 34.6087px + 0.4348vi, 40px)'
+          clampPx: 'clamp(36px, 34.6087px + 0.4348vi, 40px)',
+          multiplier: 2
         },
         {
           label: 'xl',
           minSize: 54,
           maxSize: 60,
           clamp: 'clamp(3.375rem, 3.2446rem + 0.6522vi, 3.75rem)',
-          clampPx: 'clamp(54px, 51.913px + 0.6522vi, 60px)'
+          clampPx: 'clamp(54px, 51.913px + 0.6522vi, 60px)',
+          multiplier: 3
         },
         {
           label: '2xl',
           minSize: 72,
           maxSize: 80,
           clamp: 'clamp(4.5rem, 4.3261rem + 0.8696vi, 5rem)',
-          clampPx: 'clamp(72px, 69.2174px + 0.8696vi, 80px)'
+          clampPx: 'clamp(72px, 69.2174px + 0.8696vi, 80px)',
+          multiplier: 4
         },
         {
           label: '3xl',
           minSize: 108,
           maxSize: 120,
           clamp: 'clamp(6.75rem, 6.4891rem + 1.3043vi, 7.5rem)',
-          clampPx: 'clamp(108px, 103.8261px + 1.3043vi, 120px)'
+          clampPx: 'clamp(108px, 103.8261px + 1.3043vi, 120px)',
+          multiplier: 6
         }
       ],
       oneUpPairs: [
@@ -219,77 +228,88 @@ describe('calculateSpaceScale', () => {
           minSize: 5,
           maxSize: 5,
           clamp: 'clamp(0.3125rem, 0.3125rem + 0vi, 0.3125rem)',
-          clampPx: 'clamp(5px, 5px + 0vi, 5px)'
+          clampPx: 'clamp(5px, 5px + 0vi, 5px)',
+          multiplier: 0.25
         },
         {
           label: '2xs',
           minSize: 9,
           maxSize: 10,
           clamp: 'clamp(0.5625rem, 0.5408rem + 0.1087vi, 0.625rem)',
-          clampPx: 'clamp(9px, 8.6522px + 0.1087vi, 10px)'
+          clampPx: 'clamp(9px, 8.6522px + 0.1087vi, 10px)',
+          multiplier: 0.5
         },
         {
           label: 'xs',
           minSize: 14,
           maxSize: 15,
           clamp: 'clamp(0.875rem, 0.8533rem + 0.1087vi, 0.9375rem)',
-          clampPx: 'clamp(14px, 13.6522px + 0.1087vi, 15px)'
+          clampPx: 'clamp(14px, 13.6522px + 0.1087vi, 15px)',
+          multiplier: 0.75
         },
         {
           label: 's',
           minSize: 18,
           maxSize: 20,
           clamp: 'clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem)',
-          clampPx: 'clamp(18px, 17.3043px + 0.2174vi, 20px)'
+          clampPx: 'clamp(18px, 17.3043px + 0.2174vi, 20px)',
+          multiplier: 1
         },
         {
           label: 'm',
           minSize: 27,
           maxSize: 30,
           clamp: 'clamp(1.6875rem, 1.6223rem + 0.3261vi, 1.875rem)',
-          clampPx: 'clamp(27px, 25.9565px + 0.3261vi, 30px)'
+          clampPx: 'clamp(27px, 25.9565px + 0.3261vi, 30px)',
+          multiplier: 1.5
         },
         {
           label: 'l',
           minSize: 36,
           maxSize: 40,
           clamp: 'clamp(2.25rem, 2.163rem + 0.4348vi, 2.5rem)',
-          clampPx: 'clamp(36px, 34.6087px + 0.4348vi, 40px)'
+          clampPx: 'clamp(36px, 34.6087px + 0.4348vi, 40px)',
+          multiplier: 2
         },
         {
           label: 'xl',
           minSize: 54,
           maxSize: 60,
           clamp: 'clamp(3.375rem, 3.2446rem + 0.6522vi, 3.75rem)',
-          clampPx: 'clamp(54px, 51.913px + 0.6522vi, 60px)'
+          clampPx: 'clamp(54px, 51.913px + 0.6522vi, 60px)',
+          multiplier: 3
         },
         {
           label: '2xl',
           minSize: 72,
           maxSize: 80,
           clamp: 'clamp(4.5rem, 4.3261rem + 0.8696vi, 5rem)',
-          clampPx: 'clamp(72px, 69.2174px + 0.8696vi, 80px)'
+          clampPx: 'clamp(72px, 69.2174px + 0.8696vi, 80px)',
+          multiplier: 4
         },
         {
           label: '3xl',
           minSize: 108,
           maxSize: 120,
           clamp: 'clamp(6.75rem, 6.4891rem + 1.3043vi, 7.5rem)',
-          clampPx: 'clamp(108px, 103.8261px + 1.3043vi, 120px)'
+          clampPx: 'clamp(108px, 103.8261px + 1.3043vi, 120px)',
+          multiplier: 6
         },
         {
           label: '4xl',
           minSize: 144,
           maxSize: 160,
           clamp: 'clamp(9rem, 8.6522rem + 1.7391vi, 10rem)',
-          clampPx: 'clamp(144px, 138.4348px + 1.7391vi, 160px)'
+          clampPx: 'clamp(144px, 138.4348px + 1.7391vi, 160px)',
+          multiplier: 8
         },
         {
           label: '5xl',
           minSize: 180,
           maxSize: 200,
           clamp: 'clamp(11.25rem, 10.8152rem + 2.1739vi, 12.5rem)',
-          clampPx: 'clamp(180px, 173.0435px + 2.1739vi, 200px)'
+          clampPx: 'clamp(180px, 173.0435px + 2.1739vi, 200px)',
+          multiplier: 10
         }
       ],
       oneUpPairs: [

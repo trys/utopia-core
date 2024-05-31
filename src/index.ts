@@ -42,6 +42,7 @@ export type UtopiaSize = {
   maxSize: number;
   clamp: string;
   clampPx: string;
+  multiplier: number;
 }
 
 export type UtopiaSpaceScale = {
@@ -248,6 +249,7 @@ const calculateSpaceSize = (config: UtopiaSpaceConfig, multiplier: number, step:
     label: label.toLowerCase(),
     minSize: roundValue(minSize),
     maxSize: roundValue(maxSize),
+    multiplier,
     clamp: calculateClamp({
       minSize,
       maxSize,
