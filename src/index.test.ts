@@ -7,25 +7,25 @@ const logObject = (a: unknown) => console.dir(a, { depth: 4 });
 describe('calculateClamp', () => {
 
   test('should generate a single clamp function', () => {
-    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240 });    
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240 });
     const expected = 'clamp(1rem, 0.6522rem + 1.7391vi, 2rem)';
     expect(result).toEqual(expected);
   });
 
   test('should generate a px clamp function', () => {
-    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, usePx: true });    
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, usePx: true });
     const expected = 'clamp(16px, 10.4348px + 1.7391vi, 32px)';
     expect(result).toEqual(expected);
   });
 
   test('should generate a cqi clamp function', () => {
-    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, relativeTo: 'container' });    
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, relativeTo: 'container' });
     const expected = 'clamp(1rem, 0.6522rem + 1.7391cqi, 2rem)';
     expect(result).toEqual(expected);
   });
 
   test('should generate a vw clamp function', () => {
-    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, relativeTo: 'viewport-width' });    
+    const result = calculateClamp({ minSize: 16, maxSize: 32, minWidth: 320, maxWidth: 1240, relativeTo: 'viewport-width' });
     const expected = 'clamp(1rem, 0.6522rem + 1.7391vw, 2rem)';
     expect(result).toEqual(expected);
   });
@@ -475,6 +475,168 @@ describe('calculateTypeScale', () => {
         maxFontSize: 12.8,
         wcagViolation: null,
         clamp: 'clamp(0.7813rem, 0.7747rem + 0.0326vi, 0.8rem)'
+      }
+    ];
+    expect(result).toStrictEqual(expected);
+  });
+
+  test('should generate a scale with tailwind style step labels', () => {
+    const result = calculateTypeScale({
+      minWidth: 320,
+      maxWidth: 1240,
+      minFontSize: 18,
+      maxFontSize: 20,
+      minTypeScale: 1.2,
+      maxTypeScale: 1.25,
+      positiveSteps: 5,
+      negativeSteps: 3,
+      stepLabelsStyle: 'tailwind'
+    });
+
+    const expected = [
+      {
+        step: '4xl',
+        minFontSize: 44.7898,
+        maxFontSize: 61.0352,
+        wcagViolation: null,
+        clamp: 'clamp(2.7994rem, 2.4462rem + 1.7658vi, 3.8147rem)'
+      },
+      {
+        step: '3xl',
+        minFontSize: 37.3248,
+        maxFontSize: 48.8281,
+        wcagViolation: null,
+        clamp: 'clamp(2.3328rem, 2.0827rem + 1.2504vi, 3.0518rem)'
+      },
+      {
+        step: '2xl',
+        minFontSize: 31.104,
+        maxFontSize: 39.0625,
+        wcagViolation: null,
+        clamp: 'clamp(1.944rem, 1.771rem + 0.8651vi, 2.4414rem)'
+      },
+      {
+        step: 'xl',
+        minFontSize: 25.92,
+        maxFontSize: 31.25,
+        wcagViolation: null,
+        clamp: 'clamp(1.62rem, 1.5041rem + 0.5793vi, 1.9531rem)'
+      },
+      {
+        step: 'lg',
+        minFontSize: 21.6,
+        maxFontSize: 25,
+        wcagViolation: null,
+        clamp: 'clamp(1.35rem, 1.2761rem + 0.3696vi, 1.5625rem)'
+      },
+      {
+        step: 'base',
+        minFontSize: 18,
+        maxFontSize: 20,
+        wcagViolation: null,
+        clamp: 'clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem)'
+      },
+      {
+        step: 'sm',
+        minFontSize: 15,
+        maxFontSize: 16,
+        wcagViolation: null,
+        clamp: 'clamp(0.9375rem, 0.9158rem + 0.1087vi, 1rem)'
+      },
+      {
+        step: 'xs',
+        minFontSize: 12.5,
+        maxFontSize: 12.8,
+        wcagViolation: null,
+        clamp: 'clamp(0.7813rem, 0.7747rem + 0.0326vi, 0.8rem)'
+      },
+      {
+        step: '2xs',
+        minFontSize: 10.4167,
+        maxFontSize: 10.24,
+        wcagViolation: null,
+        clamp: 'clamp(0.64rem, 0.6549rem + -0.0192vi, 0.651rem)'
+      }
+    ];
+    expect(result).toStrictEqual(expected);
+  });
+
+  test('should generate a scale with tshirt size style step labels', () => {
+    const result = calculateTypeScale({
+      minWidth: 320,
+      maxWidth: 1240,
+      minFontSize: 18,
+      maxFontSize: 20,
+      minTypeScale: 1.2,
+      maxTypeScale: 1.25,
+      positiveSteps: 5,
+      negativeSteps: 3,
+      stepLabelsStyle: 'tshirt'
+    });
+
+    const expected = [
+      {
+        step: '4xl',
+        minFontSize: 44.7898,
+        maxFontSize: 61.0352,
+        wcagViolation: null,
+        clamp: 'clamp(2.7994rem, 2.4462rem + 1.7658vi, 3.8147rem)'
+      },
+      {
+        step: '3xl',
+        minFontSize: 37.3248,
+        maxFontSize: 48.8281,
+        wcagViolation: null,
+        clamp: 'clamp(2.3328rem, 2.0827rem + 1.2504vi, 3.0518rem)'
+      },
+      {
+        step: '2xl',
+        minFontSize: 31.104,
+        maxFontSize: 39.0625,
+        wcagViolation: null,
+        clamp: 'clamp(1.944rem, 1.771rem + 0.8651vi, 2.4414rem)'
+      },
+      {
+        step: 'xl',
+        minFontSize: 25.92,
+        maxFontSize: 31.25,
+        wcagViolation: null,
+        clamp: 'clamp(1.62rem, 1.5041rem + 0.5793vi, 1.9531rem)'
+      },
+      {
+        step: 'l',
+        minFontSize: 21.6,
+        maxFontSize: 25,
+        wcagViolation: null,
+        clamp: 'clamp(1.35rem, 1.2761rem + 0.3696vi, 1.5625rem)'
+      },
+      {
+        step: 'm',
+        minFontSize: 18,
+        maxFontSize: 20,
+        wcagViolation: null,
+        clamp: 'clamp(1.125rem, 1.0815rem + 0.2174vi, 1.25rem)'
+      },
+      {
+        step: 's',
+        minFontSize: 15,
+        maxFontSize: 16,
+        wcagViolation: null,
+        clamp: 'clamp(0.9375rem, 0.9158rem + 0.1087vi, 1rem)'
+      },
+      {
+        step: 'xs',
+        minFontSize: 12.5,
+        maxFontSize: 12.8,
+        wcagViolation: null,
+        clamp: 'clamp(0.7813rem, 0.7747rem + 0.0326vi, 0.8rem)'
+      },
+      {
+        step: '2xs',
+        minFontSize: 10.4167,
+        maxFontSize: 10.24,
+        wcagViolation: null,
+        clamp: 'clamp(0.64rem, 0.6549rem + -0.0192vi, 0.651rem)'
       }
     ];
     expect(result).toStrictEqual(expected);
