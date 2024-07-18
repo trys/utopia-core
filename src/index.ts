@@ -91,7 +91,7 @@ export const calculateClamp = ({
   minWidth,
   maxWidth,
   usePx = false,
-  relativeTo = 'viewport'
+  relativeTo = 'viewport-width'
 }: UtopiaClampConfig): string => {
   const isNegative = minSize > maxSize;
   const min = isNegative ? maxSize : minSize;
