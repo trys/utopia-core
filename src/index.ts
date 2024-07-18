@@ -1,7 +1,7 @@
 // Types
 
 type UtopiaRelativeTo = 'viewport' | 'container' | 'viewport-width';
-type UtopiaStepLabelStyle = 'utopia' | 'tailwind' | 'tshirt';
+type UtopiaLabelStyle = 'utopia' | 'tailwind' | 'tshirt';
 
 export type UtopiaTypeConfig = {
   minWidth: number;
@@ -13,11 +13,12 @@ export type UtopiaTypeConfig = {
   negativeSteps?: number;
   positiveSteps?: number;
   relativeTo?: UtopiaRelativeTo;
-  stepLabelsStyle?: UtopiaStepLabelStyle
+  labelStyle?: UtopiaLabelStyle
 }
 
 export type UtopiaStep = {
-  step: string | number;
+  step: number;
+  label: string;
   minFontSize: number;
   maxFontSize: number;
   wcagViolation?: {
@@ -190,8 +191,8 @@ const calculateTypeSize = (config: UtopiaTypeConfig, viewport: number, step: num
 }
 
 
-const mapStepToLabel = (step: number, labelGroup: UtopiaStepLabelStyle = "utopia") => {
-  if (labelGroup === "utopia") return step
+const mapStepToLabel = (step: number, labelGroup: UtopiaLabelStyle = "utopia") => {
+  if (labelGroup === "utopia") return step.toString()
 
   let label = "";
 
@@ -223,7 +224,8 @@ const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep =
   const wcag = checkWCAG({ min: minFontSize, max: maxFontSize, minWidth: config.minWidth, maxWidth: config.maxWidth });
 
   return {
-    step: mapStepToLabel(step, config.stepLabelsStyle),
+    step,
+    label: mapStepToLabel(step, config.labelStyle),
     minFontSize: roundValue(minFontSize),
     maxFontSize: roundValue(maxFontSize),
     wcagViolation: wcag?.length ? {
