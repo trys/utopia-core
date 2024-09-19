@@ -25,10 +25,12 @@ type UtopiaTypeConfig = {
   negativeSteps?: number;
   positiveSteps?: number;
   relativeTo?: UtopiaRelativeTo;
+  labelStyle?: UtopiaLabelStyle;
 }
 
 type UtopiaStep = {
   step: number;
+  label: string;
   minFontSize: number;
   maxFontSize: number;
   wcagViolation: {
@@ -57,6 +59,7 @@ calculateTypeScale({
 // [
 //  {
 //    step: 5,
+//    label: '5',
 //    minFontSize: 44.79,
 //    maxFontSize: 61.04,
 //    wcagViolation: 1200,

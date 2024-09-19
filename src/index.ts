@@ -1,6 +1,7 @@
 // Types
 
 type UtopiaRelativeTo = 'viewport' | 'container' | 'viewport-width';
+type UtopiaLabelStyle = 'utopia' | 'tailwind' | 'tshirt';
 
 export type UtopiaTypeConfig = {
   minWidth: number;
@@ -12,10 +13,12 @@ export type UtopiaTypeConfig = {
   negativeSteps?: number;
   positiveSteps?: number;
   relativeTo?: UtopiaRelativeTo;
+  labelStyle?: UtopiaLabelStyle
 }
 
 export type UtopiaStep = {
   step: number;
+  label: string;
   minFontSize: number;
   maxFontSize: number;
   wcagViolation?: {
@@ -187,6 +190,31 @@ const calculateTypeSize = (config: UtopiaTypeConfig, viewport: number, step: num
   return fontSize * Math.pow(scale, step);
 }
 
+
+const mapStepToLabel = (step: number, labelGroup: UtopiaLabelStyle = "utopia") => {
+  if (labelGroup === "utopia") return step.toString();
+
+  if (step < -2) return `${-1 * (step + 1)}xs`;
+  if (step === -2) return "xs";
+
+  if (labelGroup === "tailwind") {
+    if (step === -1) return "sm";
+    if (step === 0) return "base";
+    if (step === 1) return "lg";
+  }
+
+  if (labelGroup === "tshirt") {
+    if (step === -1) return "s";
+    if (step === 0) return "m";
+    if (step === 1) return "l";
+  }
+
+  if (step === 2) return "xl";
+  if (step > 2) return `${step - 1}xl`;
+
+  return step.toString();
+}
+
 const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep => {
   const minFontSize = calculateTypeSize(config, config.minWidth, step);
   const maxFontSize = calculateTypeSize(config, config.maxWidth, step);
@@ -194,6 +222,7 @@ const calculateTypeStep = (config: UtopiaTypeConfig, step: number): UtopiaStep =
 
   return {
     step,
+    label: mapStepToLabel(step, config.labelStyle),
     minFontSize: roundValue(minFontSize),
     maxFontSize: roundValue(maxFontSize),
     wcagViolation: wcag?.length ? {
