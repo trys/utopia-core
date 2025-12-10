@@ -109,7 +109,15 @@ export const calculateClamp = ({
 
   const slope = ((maxSize / divider) - (minSize / divider)) / ((maxWidth / divider) - (minWidth / divider));
   const intersection = (-1 * (minWidth / divider)) * slope + (minSize / divider);
-  return `clamp(${roundValue(min / divider)}${unit}, ${roundValue(intersection)}${unit} + ${roundValue(slope * 100)}${relativeUnit}, ${roundValue(max / divider)}${unit})`;
+
+  const lower = roundValue(min / divider);
+  const pref = roundValue(intersection);
+  const upper = roundValue(max / divider);
+
+  if (slope === 0 && pref === lower && pref == upper) {
+    return `${lower}${unit}`;
+  }
+  return `clamp(${lower}${unit}, ${pref}${unit} + ${roundValue(slope * 100)}${relativeUnit}, ${upper}${unit})`;
 }
 
 /**
