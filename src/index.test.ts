@@ -72,8 +72,8 @@ describe('calculateSpaceScale', () => {
           label: '3xs',
           minSize: 5,
           maxSize: 5,
-          clamp: 'clamp(0.3125rem, 0.3125rem + 0vw, 0.3125rem)',
-          clampPx: 'clamp(5px, 5px + 0vw, 5px)',
+          clamp: '0.3125rem',
+          clampPx: '5px',
           multiplier: 0.25
         },
         {
@@ -228,8 +228,8 @@ describe('calculateSpaceScale', () => {
           label: '3xs',
           minSize: 5,
           maxSize: 5,
-          clamp: 'clamp(0.3125rem, 0.3125rem + 0vw, 0.3125rem)',
-          clampPx: 'clamp(5px, 5px + 0vw, 5px)',
+          clamp: '0.3125rem',
+          clampPx: '5px',
           multiplier: 0.25
         },
         {
