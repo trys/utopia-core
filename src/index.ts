@@ -169,7 +169,7 @@ export function checkWCAG({ min, max, minWidth, maxWidth }: { min: number, max: 
     if (Math.abs(failRange[1] - failRange[0]) < 0.1) failRange = null // rounding errors, ignore
   }
 
-  return failRange;
+  return !!failRange.length ? failRange : null;
 }
 
 export const calculateClamps = ({ minWidth, maxWidth, pairs = [], relativeTo }: UtopiaClampsConfig): UtopiaClamp[] => {
