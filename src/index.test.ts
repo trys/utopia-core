@@ -1,8 +1,14 @@
 import { test, expect, describe } from 'vitest';
-import { calculateClamp, calculateClamps, calculateSpaceScale, calculateTypeScale } from '.';
+import { calculateClamp, calculateClamps, calculateSpaceScale, calculateTypeScale, checkWCAG } from '.';
 
 // utils
 const logObject = (a: unknown) => console.dir(a, { depth: 4 });
+
+describe('checkWCAG', () => {
+  test('returns null when there is no violation', () => {
+    expect(checkWCAG({ min: 16, max: 16, minWidth: 320, maxWidth: 1240 })).toBeNull();
+  });
+});
 
 describe('calculateClamp', () => {
 
